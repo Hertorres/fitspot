@@ -7,10 +7,10 @@
             <span class="text-2xl">{{props.titulo}}</span>
             <span class="text-2xl">{{props.emoji}}</span>
         </h3>
-        <p class="text-zinc-500  gap-2 flex items-center"><img src = "../assets/ubicacion.svg"  class="w-5 h-5 object-cover" />{{props.ubicacion}}</p>
-        <p class="text-zinc-500  gap-2  flex items-center"><img src = "../assets/horario.svg" class="w-5 h-5 object-cover"/>{{props.horario}}</p>
+        <p class="text-zinc-500  gap-2 flex items-center mt-2"><img src = "../assets/ubicacion.svg"  class="w-5 h-5 object-cover" />{{props.ubicacion}}</p>
+        <p class="text-zinc-500  gap-2  flex items-center mt-2"><img src = "../assets/horario.svg" class="w-5 h-5 object-cover"/>{{props.horario}}</p>
      
-        <button  class="w-full  inline-block bg-black text-white py-2 px-4 rounded hover:bg-zinc-600">
+        <button  class="w-full  inline-block bg-black text-white mt-2 py-2 px-4 rounded hover:bg-zinc-600">
             Reservar</button>
     </div>
   </div>

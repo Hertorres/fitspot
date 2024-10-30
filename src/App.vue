@@ -1,7 +1,7 @@
 <template>
-  <div id="app" class="min-h-screen flex flex-col">
+  <div id="app" class="min-h-screen flex flex-col bg-zinc-200">
     <!-- Header fijo en la parte superior -->
-    <HeaderNav class="sticky top-0 z-10" @isOpen="openValue"></HeaderNav>
+    <HeaderNav class="sticky top-0 z-10 " @isOpen="openValue"></HeaderNav>
 
     <div class="flex flex-1 h-full bg-zinc-200 box-border"> 
       <Lateral :items="menu" :expanded="value" /> 
@@ -34,25 +34,32 @@ const  HeaderNav = defineAsyncComponent(() =>
 const  Lateral = defineAsyncComponent(() =>
   import('./components/Lateral.vue')
 )
-const  Icon = defineAsyncComponent(() =>
-  import('./components/Icon.vue')
-)
+
 const menu = ref([
   {
     label: 'Inicio', 
     icon: 'home', 
-    color: 'white'
+    color: 'white',
+    to: '/'
   },
 
   {
-    label: 'Categorias', 
-    icon: 'home', 
-    color: 'white'
+    label: 'Favoritos', 
+    icon: 'star', 
+    color: 'white',
+    to: '/'
   },
   {
     label: 'Metodos de Pago', 
-    icon: 'home', 
-    color: 'white'
+    icon: 'methodpay', 
+    color: 'white',
+    to: '/'
+  },
+  {
+    label: 'Ayuda', 
+    icon: 'ayuda', 
+    color: 'white',
+    to: '/'
   }
 ])
 

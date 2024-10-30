@@ -8,7 +8,7 @@
         <InputText v-model="selectUbicacion" :icon="'../assets/ubicacion.svg'" :placeholder="'Ingrese la ubicación'"></InputText>
         <Calendar v-model="selectDate" :type="'date'"/>
         <Calendar v-model="selectTime" :type="'time'"/>
-        <Buttom :text="'Buscar'" :class="'size-max bg-gray-800'" :icon="'../assets/search.svg'"></Buttom>
+        <Buttom :text="'Buscar'" :class="'size-max bg-gray-800'" :icon="'../assets/search.svg'" @click="filter()"></Buttom>
         </div>
         
         <div class="flex flex-wrap justify-center gap-6 mt-8">
@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, ref } from 'vue'
+import { defineAsyncComponent, onMounted, ref } from 'vue'
 
 const Card = defineAsyncComponent(() =>
   import('../components/Card.vue')
@@ -53,20 +53,82 @@ const canchasDisponibles = [
     Vóley: '🏐',
   };
 
-  const deporteOptions = [
-    'Seleccione un Deporte',
-    'Fútbol ⚽',
-    'Básquet 🏀',
-    'Tenis 🎾',
-    'Vóley 🏐',
+  const deporteOptions = [{
+    label: 'Seleccione un Deporte', 
+    value: 'Seleccione un Deporte'
+  },
+  {
+    label: 'Básquet 🏀', 
+    value: 'Básquet'
+  },
+  {
+    label: 'Fútbol ⚽', 
+    value: 'Fútbol'
+  },{
+    label: 'Tenis 🎾',
+    value: 'Tenis'
+  },{
+    label: 'Vóley 🏐',
+    value: 'Vóley'
+  }
     ];
-
-  const canchas = canchasDisponibles.map(cancha => ({
+    const canchas = ref([])
+  onMounted(()=> {
+    canchas.value = canchasDisponibles.map(cancha => ({
   ...cancha, 
-  emoji: deporteIconos[cancha.deporte] || ''}));
+  emoji: deporteIconos[cancha.deporte] || ''}))
+  })
 
   const selectDeporte = ref('')
   const selectUbicacion = ref('')
   const selectDate = ref('')
   const selectTime = ref('')
+
+
+  function filter() {
+
+   
+     canchas.value = canchasDisponibles.map(cancha => ({
+  ...cancha, 
+  emoji: deporteIconos[cancha.deporte] || ''})).filter((a)=> {
+    const startTime = new Date()
+    const endTime = new Date()
+    const finalTime = new Date()
+    startTime.setHours(a.horario.split('-')[0].split(':')[0])
+    startTime.setMinutes(0)
+    endTime.setHours(a.horario.split('-')[1].split(':')[0])
+    endTime.setMinutes(0) 
+    finalTime.setHours(selectTime.value.split(':')[0])
+    finalTime.setMinutes(selectTime.value.split(':')[1])
+
+
+    if(selectDeporte.value === 'Seleccione un Deporte') return a
+
+    if(a.deporte == selectDeporte.value) return a
+
+   
+    if(selectUbicacion.value.trim()!=''){
+      console.log("entre")
+      if(a.ubicacion.trim().match(new RegExp(`${selectUbicacion.value.trim()}`, 'gi'))) return a
+    }
+    
+
+   if(selectTime.value.trim() != ''){
+    console.log(startTime.toLocaleString()  )
+    console.log(finalTime.toLocaleString())
+
+    console.log(endTime.toLocaleString())
+
+    console.log(endTime.toLocaleString()<=startTime.getTime())
+    if(startTime.getTime()<= finalTime.getTime() && endTime.getTime()>=finalTime.getTime()) return a
+   }
+    
+
+   
+  
+   
+  })
+  }
+
+
 </script>

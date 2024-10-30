@@ -10,14 +10,14 @@
       <div v-if="isOpen" class="absolute  w-full bg-white rounded-md shadow-lg z-10">
         <ul class="py-1">
           <li
-            v-for="option in options"
-            :key="option"
-            @click="selectDeporte(option)"
-            :class="['px-4 py-2 cursor-pointer', { 'bg-gray-200': selectedLabel === option }]"
+            v-for="(option, index) in options"
+            :key="index"
+            @click="selectDeporte(option.value)"
+            :class="['px-4 py-2 cursor-pointer', { 'bg-gray-200': selectedLabel === option?.value }]"
           >
           <p class="text-black gap-2 flex items-center justify-between">
-            {{ option }}
-            <span v-if="selectedLabel === option"><img src="../assets/check.svg" class="w-4 h-100 object-cover"></span>
+            {{ option?.label }}
+            <span v-if="selectedLabel === option?.value"><img src="../assets/check.svg" class="w-4 h-100 object-cover"></span>
           </p>
            
           </li>
@@ -40,7 +40,7 @@
   const emits = defineEmits(['update:modelValue']);
   
   const isOpen = ref(false);
-  const selectedLabel = ref(props.options[0]); 
+  const selectedLabel = ref(props.options[0]?.value); 
   
 
   function toggleDropdown() {

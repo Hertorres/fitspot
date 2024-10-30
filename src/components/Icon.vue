@@ -19,6 +19,10 @@ const props = defineProps({
     color:{
         type:String,
         default: "black"
+    },
+    hoverColor:{
+        type:String,
+        default: "black"
     }
   });
 
@@ -51,9 +55,22 @@ watchEffect(async () => {
  :deep(svg){
     height: 100%;
     width: 100%;
+
    
 }
 :deep(svg path){
    stroke: v-bind(color)
+}
+
+:deep(svg circle){
+   stroke: v-bind(color)
+}
+
+:deep(svg):hover{
+  fill: v-bind(hoverColor) ; 
+  transform: scale(1.1); 
+  transition: transform 0.3s; 
+    
+   
 }
 </style>
