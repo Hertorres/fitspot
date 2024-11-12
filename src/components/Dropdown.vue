@@ -2,7 +2,7 @@
     <div class="relative inline-block text-left">
       <button @click="toggleDropdown" class="w-52 p-2 bg-white text-black rounded-md">
         <p class="text-black gap-2 flex justify-between items-center">
-          {{ selectedLabel }}
+          {{ selectedLabel.label }}
           <img src="../assets/down-arrow.svg" class="w-5 h-5 object-cover" />
         </p>
       </button>
@@ -12,12 +12,12 @@
           <li
             v-for="(option, index) in options"
             :key="index"
-            @click="selectDeporte(option.value)"
-            :class="['px-4 py-2 cursor-pointer', { 'bg-gray-200': selectedLabel === option?.value }]"
+            @click="selectDeporte(option)"
+            :class="['px-4 py-2 cursor-pointer', { 'bg-gray-200': selectedLabel === option }]"
           >
           <p class="text-black gap-2 flex items-center justify-between">
             {{ option?.label }}
-            <span v-if="selectedLabel === option?.value"><img src="../assets/check.svg" class="w-4 h-100 object-cover"></span>
+            <span v-if="selectedLabel === option"><img src="../assets/check.svg" class="w-4 h-100 object-cover"></span>
           </p>
            
           </li>
@@ -27,8 +27,9 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue';
+  import { ref, watchEffect} from 'vue';
  /* import { defineProps, defineEmits } from 'vue';*/
+ const selectedLabel = ref()
   
   const props = defineProps({
     options: {
@@ -36,12 +37,17 @@
       default: () => []
     }
   });
+
+
+  watchEffect( () => {
+
+    selectedLabel.value =  props.options.find((a)=> a?.default == true)
+})
   
   const emits = defineEmits(['update:modelValue']);
   
   const isOpen = ref(false);
-  const selectedLabel = ref(props.options[0]?.value); 
-  
+
 
   function toggleDropdown() {
     isOpen.value = !isOpen.value;

@@ -21,7 +21,9 @@
 </template>
 
 <script setup>
+import axios from 'axios';
 import { defineAsyncComponent, onMounted, ref } from 'vue'
+
 
 const Card = defineAsyncComponent(() =>
   import('../components/Card.vue')
@@ -40,95 +42,103 @@ const Buttom = defineAsyncComponent(() =>
   import('../components/Buttom.vue')
 )
 
-const canchasDisponibles = [
-    { id: 1, nombre: 'Cancha Central', deporte: 'Fútbol', horario: '14:00 - 16:00', imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeJQeJyzgAzTEVqXiGe90RGBFhfp_4RcJJMQ&s', ubicacion: 'Central' },
-    { id: 2, nombre: 'Cancha 2', deporte: 'Básquet', horario: '16:00 - 18:00', imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeJQeJyzgAzTEVqXiGe90RGBFhfp_4RcJJMQ&s', ubicacion: 'Asuncion' },
-    { id: 3, nombre: 'Cancha de Tenis', deporte: 'Tenis', horario: '18:00 - 20:00', imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeJQeJyzgAzTEVqXiGe90RGBFhfp_4RcJJMQ&s', ubicacion: 'Encarnacion' },
-  ];
+const canchasDisponibles = ref([])
 
-  const deporteIconos = {
-    Fútbol: '⚽',
-    Básquet: '🏀',
-    Tenis: '🎾',
-    Vóley: '🏐',
-  };
+onMounted(()=> {
 
-  const deporteOptions = [{
-    label: 'Seleccione un Deporte', 
-    value: 'Seleccione un Deporte'
-  },
-  {
-    label: 'Básquet 🏀', 
-    value: 'Básquet'
-  },
-  {
-    label: 'Fútbol ⚽', 
-    value: 'Fútbol'
-  },{
-    label: 'Tenis 🎾',
-    value: 'Tenis'
-  },{
-    label: 'Vóley 🏐',
-    value: 'Vóley'
-  }
-    ];
-    const canchas = ref([])
-  onMounted(()=> {
-    canchas.value = canchasDisponibles.map(cancha => ({
-  ...cancha, 
-  emoji: deporteIconos[cancha.deporte] || ''}))
-  })
+findCanchas()
 
-  const selectDeporte = ref('')
-  const selectUbicacion = ref('')
-  const selectDate = ref('')
-  const selectTime = ref('')
+})
 
-
-  function filter() {
-
-   
-     canchas.value = canchasDisponibles.map(cancha => ({
-  ...cancha, 
-  emoji: deporteIconos[cancha.deporte] || ''})).filter((a)=> {
-    const startTime = new Date()
-    const endTime = new Date()
-    const finalTime = new Date()
-    startTime.setHours(a.horario.split('-')[0].split(':')[0])
-    startTime.setMinutes(0)
-    endTime.setHours(a.horario.split('-')[1].split(':')[0])
-    endTime.setMinutes(0) 
-    finalTime.setHours(selectTime.value.split(':')[0])
-    finalTime.setMinutes(selectTime.value.split(':')[1])
-
-
-    if(selectDeporte.value === 'Seleccione un Deporte') return a
-
-    if(a.deporte == selectDeporte.value) return a
-
-   
-    if(selectUbicacion.value.trim()!=''){
-      console.log("entre")
-      if(a.ubicacion.trim().match(new RegExp(`${selectUbicacion.value.trim()}`, 'gi'))) return a
-    }
-    
-
-   if(selectTime.value.trim() != ''){
-    console.log(startTime.toLocaleString()  )
-    console.log(finalTime.toLocaleString())
-
-    console.log(endTime.toLocaleString())
-
-    console.log(endTime.toLocaleString()<=startTime.getTime())
-    if(startTime.getTime()<= finalTime.getTime() && endTime.getTime()>=finalTime.getTime()) return a
+async function findCanchas(param) {
+  try {
+    let config = {
+  method: 'get',
+  maxBodyLength: Infinity,
+  url: `http://localhost/api/cancha`,
+  headers: {
+    'Content-Type': 'application/json'
    }
-    
+};
+const response = await axios.request(config);
+console.log(response.data)
+
+
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+// const canchasDisponibles = [
+//     { id: 1, nombre: 'Cancha Central', deporte: 'Fútbol', horario: '14:00 - 16:00', imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoLlUeAmlIhTHAYCj122JU6EeknTsy6iMQ8g&s', ubicacion: 'Central' },
+//     { id: 2, nombre: 'Cancha 2', deporte: 'Básquet', horario: '16:00 - 18:00', imagen: 'https://media.istockphoto.com/id/1551914538/es/foto/cancha-de-baloncesto-en-ilustraci%C3%B3n-3d.jpg?s=612x612&w=0&k=20&c=t10-iOyXzECSut69S3YlE5nqpnhZ99dtCE9xE--WXSk=', ubicacion: 'Asuncion' },
+//     { id: 3, nombre: 'Cancha de Tenis', deporte: 'Tenis', horario: '18:00 - 20:00', imagen: 'https://static8.depositphotos.com/1009701/893/i/450/depositphotos_8930781-stock-photo-tennis-court.jpg', ubicacion: 'Encarnacion' },
+//   ];
+
+//   const deporteIconos = {
+//     Fútbol: '⚽',
+//     Básquet: '🏀',
+//     Tenis: '🎾',
+//     Vóley: '🏐',
+//   };
+
+//   const deporteOptions = [{
+//     label: 'Seleccione un Deporte', 
+//     value: {}, 
+//     default: true
+//   },
+//   {
+//     label: 'Básquet 🏀', 
+//     value: 'Básquet'
+//   },
+//   {
+//     label: 'Fútbol ⚽', 
+//     value: 'Fútbol'
+//   },{
+//     label: 'Tenis 🎾',
+//     value: 'Tenis'
+//   },{
+//     label: 'Vóley 🏐',
+//     value: 'Vóley'
+//   }
+//     ];
+//     const canchas = ref([])
+//   onMounted(()=> {
+//     canchas.value = canchasDisponibles.map(cancha => ({
+//   ...cancha, 
+//   emoji: deporteIconos[cancha.deporte] || ''}))
+//   })
+
+//   const selectDeporte = ref({})
+//   const selectUbicacion = ref('')
+//   const selectDate = ref('')
+//   const selectTime = ref('')
+
+
+//   function filter() {
+
+//     console.log(canchasDisponibles.map(cancha => ({
+//   ...cancha, 
+//   emoji: deporteIconos[cancha.deporte] || ''})))
+
 
    
+//      canchas.value = canchasDisponibles.map(cancha => ({
+//   ...cancha, 
+//   emoji: deporteIconos[cancha.deporte] || ''})).filter(cancha => {
+//     return [
+//   //{ key: 'deporte', value: selectDeporte.value.value },
+//   { key: 'horario', value: selectTime.value },
+//   { key: 'ubicacion', value: selectUbicacion.value ? new RegExp(selectUbicacion.value, 'i') : '' }
+// ].every(({ key, value }) => {
+//   return value === '' || 
+//   (value instanceof RegExp ? value.test(cancha[key]) : cancha[key] === value)
   
-   
-  })
-  }
+//         // (typeof value === 'object' && value !== ''  && Object.keys(value).length === 0) || 
+//        //  (value instanceof RegExp ? value.test(cancha[key]) : cancha[key] === value);
+// })
+//   });
+//   }
 
 
 </script>
