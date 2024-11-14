@@ -2,7 +2,7 @@
  
 
    
-      <div class="w-full mx-auto ">
+      <div class="w-full mx-auto pb-10 pt-8">
         <div class="flex flex-wrap w-full gap-2 justify-center">
         <Dropdown v-model="selectDeporte" :options="deporteOptions"></Dropdown>
         <InputText v-model="selectUbicacion" :icon="'../assets/ubicacion.svg'" :placeholder="'Ingrese la ubicación'"></InputText>
@@ -12,8 +12,12 @@
         </div>
         
         <div class="flex flex-wrap justify-center gap-6 mt-8">
-            <Card  v-for="(item, index) in canchas" :titulo="item.nombre" :horario="item.horario" :ubicacion="item.ubicacion"
-            :emoji="item.emoji" :imagen="item.imagen" :key="index"/>  
+        
+            <Card  v-for="(item, index) in canchas" :titulo="item.nombre" :horario="`${item.horarios[0] ? new Date (`${item.horarios[0]?.fecha.split('T')[0]}T${item.horarios[0]?.horaInicio}` ).toLocaleString() : 'NO HAY HORARIOS DISPONIBLES' }`" :ubicacion="item?.localidad?.direccion"
+            :emoji="item.emoji" :imagen="item.imagen" :key="index">
+      
+          </Card>
+             
         </div>
     </div>
 
@@ -42,11 +46,33 @@ const Buttom = defineAsyncComponent(() =>
   import('../components/Buttom.vue')
 )
 
-const canchasDisponibles = ref([])
+const canchas = ref([])
+const deporteOptions = ref([{
+    label: 'Seleccione un Deporte', 
+    value: {}, 
+    default: true
+  }]);
+
+const img = {
+  Fútbol: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_hCJ00ytDGrDTDXldjA5iiJnC3hH9yx9LDQ&s', 
+  Tenis: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc88K9tk3m9JG4poJT941x0ytQsQDKk8VjPA&s',
+  Básquetbol: 'https://media.istockphoto.com/id/1551911414/es/foto/cancha-de-baloncesto-vac%C3%ADa-en-ilustraci%C3%B3n-3d.jpg?s=612x612&w=0&k=20&c=72EqSl_hLXCWEW-CscSXzqxuz8NEQxzKrOs8EL-xeS4=', 
+  Vóley: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJa1GyeXAVcRTS7W2UlsMaqy4_yOf3Nm0nxA&s',
+  Pádel: 'https://civideportes.com.co/wp-content/uploads/2020/11/cancha-de-pa%CC%81del-de-vidrio--980x650.jpg'
+} 
+
+const deporteIconos = {
+    Fútbol: '⚽',
+    Básquetbol: '🏀',
+    Tenis: '🎾',
+    Vóley: '🏐',
+  }
+
 
 onMounted(()=> {
-
+findDeporte()
 findCanchas()
+
 
 })
 
@@ -61,13 +87,60 @@ async function findCanchas(param) {
    }
 };
 const response = await axios.request(config);
-console.log(response.data)
+
+canchas.value = response.data.map((a)=> {
+
+  const horarios = a.horarios.sort((a,b)=> {
+    const fechaI = new Date(a.fecha)
+    const fechaS = new Date(a.fecha)
+    fechaI.setHours(parseInt(a.horaInicio.split(':')[0]))
+    fechaI.setMinutes(parseInt(a.horaInicio.split(':')[1]))
+    fechaS.setHours(parseInt(b.horaInicio.split(':')[0]))
+    fechaS.setMinutes(parseInt(b.horaInicio.split(':')[1]))
+    return fechaI.getTime() - fechaS.getTime()
+  })
+a.horarios = [...horarios]
+
+a.imagen = img[a.deporte.nombre] || ''
+a.emoji = deporteIconos[a.deporte.nombre] || ''
+return a;
+});
+
+
+
+
 
 
   } catch (error) {
     console.error(error)
   }
 }
+
+async function findDeporte(param) {
+  try {
+    let config = {
+  method: 'get',
+  maxBodyLength: Infinity,
+  url: `http://localhost/api/deporte`,
+  headers: {
+    'Content-Type': 'application/json'
+   }
+};
+const response = await axios.request(config);
+
+deporteOptions.value = [...deporteOptions.value,...response.data.map((a)=>  {
+  return {
+    label: a.nombre, 
+    value: a
+  }
+})]
+
+
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 
 // const canchasDisponibles = [
 //     { id: 1, nombre: 'Cancha Central', deporte: 'Fútbol', horario: '14:00 - 16:00', imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoLlUeAmlIhTHAYCj122JU6EeknTsy6iMQ8g&s', ubicacion: 'Central' },

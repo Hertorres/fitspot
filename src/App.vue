@@ -1,15 +1,15 @@
 <template>
   <div id="app" class="min-h-screen flex flex-col bg-zinc-200">
     <!-- Header fijo en la parte superior -->
-    <HeaderNav class="sticky top-0 z-10 " @isOpen="openValue"></HeaderNav>
+    <HeaderNav class="sticky top-0 z-10" @isOpen="openValue"></HeaderNav>
 
-    <div class="flex flex-1 h-full bg-zinc-200 box-border"> 
-      <Lateral :items="menu" :expanded="value" /> 
+    <div class="flex flex-grow overflow-hidden">
+      <!-- Componente lateral fijo -->
+      <Lateral :items="menu" :expanded="value" class=" flex-shrink-0" />
 
-      <!-- Contenido Principal -->
-      <div class="flex-1 p-4 overflow-auto flex bg-zinc-200">
+      <!-- Contenedor del router-view con scroll -->
+      <div class="flex-grow overflow-y-auto">
         <router-view />
-       
       </div>
     </div>
   </div>
@@ -19,7 +19,7 @@
 
 <style scoped>
 html, body, #app {
-  height: 100%;
+  height: 100vh;
 }
 </style>
 
