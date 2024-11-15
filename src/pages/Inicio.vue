@@ -48,6 +48,7 @@ const store = usarUsuario()
 
 
 
+
 const Card = defineAsyncComponent(() =>
   import('../components/Card.vue')
 )

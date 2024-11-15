@@ -1,9 +1,9 @@
 <template>
     <div class="flex flex-wrap justify-between gap-1 mt-8 ml-2 mr-2 bg-white rounded-lg shadow-md overflow-hidden">
-       <div class=" basis-3/4 p-2">
-        <h1 class="text-4xl">{{ cancha.nombre }}</h1>
-        {{ cancha.deporte.descripcion }}
-        <!-- <img src=""> -->
+       <div class=" basis-3/4 p-2 flex flex-col gap-3">
+        <h1 class="text-4xl">{{ cancha?.nombre }}</h1>
+        {{ cancha?.deporte?.descripcion }}
+        <img :src="store.link">
       
        </div>   
        <div class=" flex-grow p-2 flex flex-col ">
@@ -16,6 +16,12 @@
                 Reservar    
                 </button>
                 </div>
+        </div>
+        <div class="flex mt-6 justify-center flex-col gap-5">
+           <label class="text-3xl font-bold">Descripcion</label>
+           <label class="text-xl font-bold">Precio: <p class="font-normal">{{ cancha.precioPorHora }} por hora.</p></label>
+           <label class="text-xl font-bold">Direccion: <p class="font-normal">{{ cancha?.localidad?.direccion }}</p></label>
+           <label class="text-xl font-bold">Capacidad: <p class="font-normal">{{ cancha.capacidad }}</p></label>
         </div>
         
        
@@ -37,6 +43,10 @@ import axios from 'axios';
 import { onMounted, watch, ref} from 'vue'
 import { useRoute } from 'vue-router'
 import Icon from '../components/Icon.vue';
+import { usarReserva } from '../store/reserva';
+
+const store = usarReserva();
+
 
 
 const route = useRoute();
