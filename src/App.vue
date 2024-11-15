@@ -25,15 +25,16 @@ html, body, #app {
 
 <script setup>
 import { RouterView } from 'vue-router';
-import { defineAsyncComponent, ref } from 'vue'
+import {  ref } from 'vue'
+  import HeaderNav from './components/HeaderNav.vue'
+  import Lateral from './components/Lateral.vue'
+
 const value = ref(false)
 
-const  HeaderNav = defineAsyncComponent(() =>
-  import('./components/HeaderNav.vue')
-)
-const  Lateral = defineAsyncComponent(() =>
-  import('./components/Lateral.vue')
-)
+
+
+
+
 
 const menu = ref([
   {

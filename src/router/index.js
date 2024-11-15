@@ -19,6 +19,17 @@ const routes = [
     
   } 
 
+  , 
+
+
+
+  {
+    path: '/:id',
+    name: 'Reserva',
+    component: () => import('../pages/Reserva.vue'),
+    
+  }
+    
   ]
 
     const router = createRouter({
