@@ -28,36 +28,54 @@
 
   
   <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return {
-        username: '',
-        password: '',
-        errorMessage: ''
-      };
-    },
-    methods: {
-      async login() {
-        const payload = {
-          Email: this.username, // Cambiar a los datos del formulario
-          Password: this.password
-        };
-  
-        try {
-          const response = await axios.post('http://localhost/api/auth/login', payload);
-          console.log('Respuesta completa:', response);
-          console.log('Token:', response.data.token); // Manejar el token recibido
+ import { ref, provide } from 'vue';
+import axios from 'axios';
+import { usarUsuario } from '../store/usuario';
+import { useRouter } from 'vue-router'
 
-        } catch (error) {
-          this.errorMessage = error.response ? error.response.data : 'Error en el login';
-          console.error('Error en el login:', this.errorMessage);
-          
-        }
+
+
+
+export default {
+  setup() {
+    const username = ref('');
+    const password = ref('');
+    const errorMessage = ref('');
+    const usuario = usarUsuario();
+    const isview = ref(false); // Hacer isview reactivo
+    const route = useRouter();
+    async function login() {
+      const payload = {
+        Email: username.value,
+        Password: password.value
+      };
+
+      try {
+        const response = await axios.post('http://localhost/api/auth/login', payload);
+        console.log('Respuesta completa:', response.data);
+        await usuario.setConexion(response.data);
+        isview.value = true; // Actualizar el valor reactivo
+        route.push('/');
+      } catch (error) {
+        console.error(error);
+        errorMessage.value = error.response ? error.response.data : 'Error en el login';
+        console.error('Error en el login:', errorMessage.value);
       }
     }
-  };
+
+    // Proveer `isview` como una referencia reactiva desde `setup()`
+    provide('isConected', isview);
+
+    return {
+      username,
+      password,
+      errorMessage,
+      login
+    };
+  }
+};
+
+
   </script>
   <style scoped>
   .login-container {
