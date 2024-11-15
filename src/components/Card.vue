@@ -21,6 +21,9 @@
 <script setup>
 import { ref, watchEffect } from 'vue';
 import router from '../router';
+import { usarReserva } from '../store/reserva';
+
+const store = usarReserva();
 const id = ref ('');
  
 const props = defineProps({
@@ -54,8 +57,9 @@ watchEffect((a)=> {
 })
 
 async function handleClick(id) {
-
-
+ 
+    store.setLink(props.imagen);
+    store.setId(id)
    await router.push({name: 'Reserva', params:{id}});
     
 }
