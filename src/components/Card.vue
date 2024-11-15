@@ -26,23 +26,23 @@ const id = ref ('');
 const props = defineProps({
     titulo: {
         type: String,
-        required: true
+       
     },
     ubicacion:{
         type: String,
-        required: true
+      
     }, 
     horario:{
         type: String,
-        required: true
+        
     }, 
     emoji: {
         type: String,
-        required: true
+       
     }, 
     imagen: {
         type: String,
-        required: true
+     
     },
     id: {
         type: Number

@@ -25,9 +25,9 @@ html, body, #app {
 
 <script setup>
   import { RouterView } from 'vue-router';  
-  import {  ref, onMounted} from 'vue'
-  import HeaderNav from './components/HeaderNav.vue'
-  import Lateral from './components/Lateral.vue'
+  import {  ref, onMounted} from 'vue';
+  import HeaderNav from './components/HeaderNav.vue';
+  import Lateral from './components/Lateral.vue';
   import { usarUsuario } from './store/usuario';
   import router from './router';
   const store = usarUsuario()
