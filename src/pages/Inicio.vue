@@ -1,6 +1,4 @@
 <template>
- 
-
    
       <div class="w-full mx-auto pb-10 pt-8">
         <div class="flex flex-wrap w-full gap-2 justify-center">
@@ -10,11 +8,27 @@
         <Calendar v-model="selectTime" :type="'time'"/>
         <Buttom :text="'Buscar'" :class="'size-max bg-gray-800'" :icon="'../assets/search.svg'" @click="filter()"></Buttom>
         </div>
+        <h2 class="text-center text-3xl font-bold mt-6" style="margin-top: 2%;">
+          Recomendaciones para vos
+        </h2>
+        <div class="flex flex-wrap w-full gap-2 justify-center">
+          <Card  v-for="(item, index) in canchasRecomendaciones" :titulo="item.nombre"  :id="item.id" :key="index" style="margin-top: 2%;">
+
+      
+          </Card>
+        </div>
         
+
+        <h2 class="text-center text-3xl font-bold mt-6" >
+          Teambien tenemos estas opciones!!
+        </h2>
         <div class="flex flex-wrap justify-center gap-6 mt-8">
+        
+         
         
             <Card  v-for="(item, index) in canchas" :titulo="item.nombre" :horario="`${item.horarios[0] ? new Date (`${item.horarios[0]?.fecha.split('T')[0]}T${item.horarios[0]?.horaInicio}` ).toLocaleString() : 'NO HAY HORARIOS DISPONIBLES' }`" :ubicacion="item?.localidad?.direccion"
             :emoji="item.emoji" :imagen="item.imagen" :id="item.id" :key="index">
+
       
           </Card>
              
@@ -26,7 +40,12 @@
 
 <script setup>
 import axios from 'axios';
-import { defineAsyncComponent, onMounted, ref } from 'vue'
+import { defineAsyncComponent, onMounted, ref } from 'vue';
+import { usarUsuario } from '../store/usuario';
+
+const store = usarUsuario()
+
+
 
 
 
@@ -52,6 +71,7 @@ const Buttom = defineAsyncComponent(() =>
   const selectTime = ref('')
 
 const canchas = ref([])
+const canchasRecomendaciones = ref([])
 const deporteOptions = ref([{
     label: 'Seleccione un Deporte', 
     value: {}, 
@@ -77,7 +97,7 @@ const deporteIconos = {
 onMounted(()=> {
 findDeporte()
 findCanchas()
-
+findRecomendaciones()
 
 })
 
@@ -91,6 +111,7 @@ async function findCanchas(param) {
     'Content-Type': 'application/json'
    }
 };
+
 const response = await axios.request(config);
 
 canchas.value = response.data.map((a)=> {
@@ -120,6 +141,28 @@ return a;
     console.error(error)
   }
 }
+async function findRecomendaciones(param) {
+  try {
+    let config = {
+  method: 'get',
+  maxBodyLength: Infinity,
+  url: `http://localhost/api/Recomendaciones/usuario`,
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer '+store.token
+   }
+   
+}
+
+const response = await axios.request(config);
+
+canchasRecomendaciones.value = response.data
+
+  }catch(error){
+console.error(error);
+  }
+}
+
 
 async function findDeporte(param) {
   try {
