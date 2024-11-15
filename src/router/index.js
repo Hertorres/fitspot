@@ -10,7 +10,16 @@ const routes = [
     name: 'Inicio',
     component: () => import('../pages/Inicio.vue'),
     
-  } 
+  }, 
+
+
+
+  {
+    path: '/:id',
+    name: 'Reserva',
+    component: () => import('../pages/Reserva.vue'),
+    
+  }
     
   ]
 
