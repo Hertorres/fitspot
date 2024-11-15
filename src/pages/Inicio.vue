@@ -14,7 +14,7 @@
         <div class="flex flex-wrap justify-center gap-6 mt-8">
         
             <Card  v-for="(item, index) in canchas" :titulo="item.nombre" :horario="`${item.horarios[0] ? new Date (`${item.horarios[0]?.fecha.split('T')[0]}T${item.horarios[0]?.horaInicio}` ).toLocaleString() : 'NO HAY HORARIOS DISPONIBLES' }`" :ubicacion="item?.localidad?.direccion"
-            :emoji="item.emoji" :imagen="item.imagen" :key="index">
+            :emoji="item.emoji" :imagen="item.imagen" :id="item.id" :key="index">
       
           </Card>
              
@@ -45,6 +45,10 @@ const Calendar = defineAsyncComponent(() =>
 const Buttom = defineAsyncComponent(() =>
   import('../components/Buttom.vue')
 )
+  const selectDeporte = ref({})
+  const selectUbicacion = ref('')
+  const selectDate = ref('')
+  const selectTime = ref('')
 
 const canchas = ref([])
 const deporteOptions = ref([{
